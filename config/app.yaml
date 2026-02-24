@@ -1,0 +1,27 @@
+app:
+  name: "DisabilitasKu Vision AI"
+  version: "2.0.0"
+  description: "AI Visual Recognition untuk membantu penyandang tunanetra"
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+
+models:
+  detection:
+    name: "MobileNetV2"
+    top_k: 5
+  ocr:
+    languages: "ind+eng"
+  scene:
+    model_name: "Salesforce/blip-image-captioning-large"
+    max_tokens: 100
+  translator:
+    model_name: "Helsinki-NLP/opus-mt-en-id"
+  tts:
+    language: "id"
+    slow: false
+
+camera:
+  max_fps: 10
+  frame_quality: 80

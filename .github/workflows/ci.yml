@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app_disabilitas_mata_ai/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "app_disabilitas_mata_ai/**"
+
+defaults:
+  run:
+    working-directory: app_disabilitas_mata_ai
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check .
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Install Tesseract
+        run: sudo apt-get install -y tesseract-ocr tesseract-ocr-ind
+      - run: pytest tests/ -v --tb=short
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t disabilitasku-vision-ai .

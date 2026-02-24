@@ -1,0 +1,14 @@
+services:
+  vision-ai:
+    build: .
+    container_name: disabilitasku-vision-ai
+    ports:
+      - "8000:8000"
+    volumes:
+      - model_cache:/root/.cache
+    env_file:
+      - .env
+    restart: unless-stopped
+
+volumes:
+  model_cache:
